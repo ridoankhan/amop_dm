@@ -1,0 +1,24 @@
+{
+  "name": "device_mangement",
+  "version": "1.0.0",
+  "description": "A device management api that will be used API as a service and will be the point of communication with many device manufacturing companies",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "API-AS-A-SERVICE",
+    "DEVICE_MANAGEMENT"
+  ],
+  "author": "Ridoan Khan Anik",
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^17.1.0",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "fastify": "^4.23.0",
+    "mongoose": "^7.5.1"
+  }
+}
