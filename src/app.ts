@@ -18,6 +18,7 @@ mongoose
     process.exit(1)
   })
 
+// handling the cors
 fastify.register(cors, {
   origin: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],

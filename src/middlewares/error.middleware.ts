@@ -1,6 +1,7 @@
 import { FastifyPluginCallback } from 'fastify'
 
 const errorHandlerPlugin: FastifyPluginCallback = (fastify, options, done) => {
+  // Set a custom error handler for the entire Fastify instance
   fastify.setErrorHandler((error, request, reply) => {
     // Log the error for debugging purposes
     console.error('Error:', error)
