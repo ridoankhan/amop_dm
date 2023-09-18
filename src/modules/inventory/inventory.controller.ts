@@ -2,14 +2,14 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import httpStatus from 'http-status'
 import ApiError from '../../utils/errors/ApiError'
 import { createInventoryItem, getAllInventory } from './inventory.service'
-import { inventoryType } from './inventory.type'
+import { InventoryType } from './inventory.type'
 
 export const createInventoryItemHandler = async (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
   try {
-    const data = request.body as inventoryType
+    const data = request.body as InventoryType
 
     const inventoryItem = await createInventoryItem(data)
     reply.code(httpStatus.CREATED).send({ data: inventoryItem })
@@ -18,7 +18,6 @@ export const createInventoryItemHandler = async (
     if (error instanceof ApiError) {
       reply.code(error.statusCode).send(error.message)
     } else {
-      // Handle other types of errors
       reply.code(httpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
     }
   }

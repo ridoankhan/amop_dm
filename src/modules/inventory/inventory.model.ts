@@ -46,7 +46,7 @@ const inventorySchema: Schema<InventoryDocument> = new Schema(
     mfg: {
       type: String,
       required: true,
-    },
+    }, // should be manufacturers
     status: {
       type: String,
       required: true,
@@ -54,7 +54,7 @@ const inventorySchema: Schema<InventoryDocument> = new Schema(
     lastconnect: {
       type: Date,
       required: true,
-    },
+    }, // the data should be given from us and should be created optioanl.
   },
   {
     timestamps: true,

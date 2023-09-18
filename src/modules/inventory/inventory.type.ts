@@ -1,4 +1,4 @@
-export interface inventoryType {
+export interface InventoryType {
   provider: string
   customer: string
   iccid: number

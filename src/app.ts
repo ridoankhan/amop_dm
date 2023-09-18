@@ -19,6 +19,7 @@ mongoose
   })
 
 // handling the cors
+// comments need to be more explanatory
 fastify.register(cors, {
   origin: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
