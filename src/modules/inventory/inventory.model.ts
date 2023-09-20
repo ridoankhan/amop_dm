@@ -8,7 +8,7 @@ interface InventoryDocument extends Document {
   ip: string
   mac: string
   license: string
-  mfg: string
+  manufacturer: string
   status: string
   lastconnect: Date
 }
@@ -43,10 +43,10 @@ const inventorySchema: Schema<InventoryDocument> = new Schema(
       type: String,
       required: true,
     },
-    mfg: {
+    manufacturer: {
       type: String,
       required: true,
-    }, // should be manufacturers
+    },
     status: {
       type: String,
       required: true,

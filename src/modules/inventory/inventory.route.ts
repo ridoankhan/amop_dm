@@ -1,7 +1,8 @@
 import { FastifyInstance } from 'fastify'
 import {
-  createInventoryItemHandler,
+  // createInventoryItemHandler,
   getAllInventoryHandler,
+  createBulkInventoryHandler,
 } from './inventory.controller'
 
 export const inventoryRoutes = (
@@ -9,7 +10,8 @@ export const inventoryRoutes = (
   options: any,
   done: () => void
 ) => {
-  fastify.post('', options, createInventoryItemHandler)
+  // fastify.post('/create', options, createInventoryItemHandler)
+  fastify.post('/create', options, createBulkInventoryHandler)
   fastify.get('/list', options, getAllInventoryHandler)
   done()
 }

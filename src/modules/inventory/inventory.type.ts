@@ -6,7 +6,7 @@ export interface InventoryType {
   ip: string
   mac: string
   license: string
-  mfg: string
+  manufacturer: string
   status: string
-  lastconnect: string
+  lastconnect: Date
 }
