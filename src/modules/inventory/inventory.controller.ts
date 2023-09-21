@@ -1,22 +1,20 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import httpStatus from 'http-status'
 import ApiError from '../../utils/errors/ApiError'
-import {
-  // createInventoryItem,
-  getAllInventory,
-  createBulkInventory,
-} from './inventory.service'
+import { getAllInventory, createBulkInventory } from './inventory.service'
 import { InventoryType } from './inventory.type'
 
 /**
- * Controller method for handling requests to retrieve all inventory items.
+ * Controller method for retrieving all inventory items.
+ *
  * @param {FastifyRequest} request - The Fastify request object.
  * @param {FastifyReply} reply - The Fastify reply object.
+ * @returns {Promise<void>}
  */
 export const getAllInventoryHandler = async (
   request: FastifyRequest,
   reply: FastifyReply
-) => {
+): Promise<void> => {
   try {
     // Fetch all inventory items from the service
     const inventory = await getAllInventory()
@@ -24,7 +22,7 @@ export const getAllInventoryHandler = async (
     // Respond with a success status code and the retrieved inventory data
     reply.code(httpStatus.OK).send(inventory)
   } catch (error) {
-    console.log(error)
+    console.error(error)
 
     // Handle errors and send appropriate responses
     if (error instanceof ApiError) {
@@ -36,14 +34,16 @@ export const getAllInventoryHandler = async (
 }
 
 /**
- * Controller method for handling requests to create multiple inventory items in bulk.
+ * Controller method for creating multiple inventory items in bulk.
+ *
  * @param {FastifyRequest} request - The Fastify request object.
  * @param {FastifyReply} reply - The Fastify reply object.
+ * @returns {Promise<void>}
  */
 export const createBulkInventoryHandler = async (
   request: FastifyRequest,
   reply: FastifyReply
-) => {
+): Promise<void> => {
   try {
     // Extract the request body data as an array of inventory items
     const data = request.body as InventoryType[]
@@ -51,6 +51,11 @@ export const createBulkInventoryHandler = async (
     // Create multiple inventory items in bulk using the service
     const inventoryItems = await createBulkInventory(data)
 
+    if (!inventoryItems)
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        'Failed to create inventory'
+      )
     // Respond with a success status code and a message indicating successful creation
     reply
       .code(httpStatus.CREATED)

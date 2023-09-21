@@ -3,6 +3,8 @@ import { connectToDatabase } from './config/database.config'
 import { inventoryRoutes } from './modules/inventory/inventory.route'
 import errorHandlerPlugin from './middlewares/error.middleware'
 import cors from '@fastify/cors'
+const fastifyMongoDbSanitizer = require('fastify-mongodb-sanitizer')
+
 import { blue, bold, underline } from 'colorette'
 
 // Create a Fastify instance with logging enabled
@@ -17,10 +19,18 @@ fastify.register(cors, {
   credentials: true,
 })
 
+const fastifyMongodbsanitizerOptions = {
+  params: true,
+  query: true,
+  body: true,
+}
+
 // Define a simple route for the root endpoint
-fastify.get('/', async (request, reply) => {
-  return { message: 'Welcome to AMOP Device Management API' }
-})
+fastify
+  .register(fastifyMongoDbSanitizer, fastifyMongodbsanitizerOptions)
+  .get('/', async (request, reply) => {
+    return { message: 'Welcome to AMOP Device Management API' }
+  })
 
 // Register the inventory routes with a prefix
 fastify.register(inventoryRoutes, { prefix: '/api/inventory' })

@@ -2,11 +2,14 @@ import { Inventory } from './inventory.model'
 import { InventoryType } from './inventory.type'
 
 /**
- * Create a single inventory item.
+ * Create a single inventory item in the database.
+ *
  * @param {InventoryType} data - The data for the new inventory item.
  * @returns {Promise<InventoryType>} - A promise that resolves to the created inventory item.
  */
-const createInventoryItem = async (data: InventoryType) => {
+const createInventoryItem = async (
+  data: InventoryType
+): Promise<InventoryType> => {
   try {
     // Create a new inventory item in the database
     const inventory = await Inventory.create(data)
@@ -19,9 +22,10 @@ const createInventoryItem = async (data: InventoryType) => {
 
 /**
  * Retrieve all inventory items from the database.
+ *
  * @returns {Promise<InventoryType[]>} - A promise that resolves to an array of inventory items.
  */
-const getAllInventory = async () => {
+const getAllInventory = async (): Promise<InventoryType[]> => {
   try {
     // Fetch all inventory items from the database
     const inventory = await Inventory.find().exec()
@@ -34,10 +38,13 @@ const getAllInventory = async () => {
 
 /**
  * Create multiple inventory items in bulk.
+ *
  * @param {InventoryType[]} data - An array of data for the new inventory items.
  * @returns {Promise<InventoryType[]>} - A promise that resolves to an array of created inventory items.
  */
-const createBulkInventory = async (data: InventoryType[]) => {
+const createBulkInventory = async (
+  data: InventoryType[]
+): Promise<InventoryType[]> => {
   try {
     const createdInventoryItems: InventoryType[] = []
 
