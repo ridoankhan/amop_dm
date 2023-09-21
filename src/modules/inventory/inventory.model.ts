@@ -53,8 +53,8 @@ const inventorySchema: Schema<InventoryDocument> = new Schema(
     },
     lastconnect: {
       type: Date,
-      required: true,
-    }, // the data should be given from us and should be created optioanl.
+      required: false,
+    },
   },
   {
     timestamps: true,

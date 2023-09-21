@@ -4,6 +4,7 @@ import { inventoryRoutes } from './modules/inventory/inventory.route'
 import errorHandlerPlugin from './middlewares/error.middleware'
 import cors from '@fastify/cors'
 const fastifyMongoDbSanitizer = require('fastify-mongodb-sanitizer')
+import config from './config/config'
 
 import { blue, bold, underline } from 'colorette'
 
@@ -39,12 +40,12 @@ fastify.register(inventoryRoutes, { prefix: '/api/inventory' })
 fastify.register(errorHandlerPlugin)
 
 // Start the server
-const PORT = process.env.PORT || 5000
+const PORT: number = config.port || 5000
 const start = async () => {
   try {
     fastify.listen(
       {
-        port: 5000,
+        port: PORT,
         host: '0.0.0.0', // Listen on all available network interfaces
       },
       (err, address) => {
