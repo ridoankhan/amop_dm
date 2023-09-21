@@ -1,28 +1,47 @@
 import { Inventory } from './inventory.model'
 import { InventoryType } from './inventory.type'
 
-const createInventoryItem = async (data: any) => {
+/**
+ * Create a single inventory item.
+ * @param {InventoryType} data - The data for the new inventory item.
+ * @returns {Promise<InventoryType>} - A promise that resolves to the created inventory item.
+ */
+const createInventoryItem = async (data: InventoryType) => {
   try {
+    // Create a new inventory item in the database
     const inventory = await Inventory.create(data)
     return inventory
   } catch (error) {
+    // If an error occurs during creation, throw an error with a specific message
     throw new Error('Error creating inventory item')
   }
 }
 
+/**
+ * Retrieve all inventory items from the database.
+ * @returns {Promise<InventoryType[]>} - A promise that resolves to an array of inventory items.
+ */
 const getAllInventory = async () => {
   try {
+    // Fetch all inventory items from the database
     const inventory = await Inventory.find().exec()
     return inventory
   } catch (error) {
+    // If an error occurs during fetching, throw an error with a specific message
     throw new Error('Error fetching inventory data')
   }
 }
 
+/**
+ * Create multiple inventory items in bulk.
+ * @param {InventoryType[]} data - An array of data for the new inventory items.
+ * @returns {Promise<InventoryType[]>} - A promise that resolves to an array of created inventory items.
+ */
 const createBulkInventory = async (data: InventoryType[]) => {
   try {
     const createdInventoryItems: InventoryType[] = []
 
+    // Iterate through the data and create each inventory item
     for (const itemData of data) {
       const inventoryItem = await createInventoryItem(itemData)
       createdInventoryItems.push(inventoryItem)
@@ -30,8 +49,9 @@ const createBulkInventory = async (data: InventoryType[]) => {
 
     return createdInventoryItems
   } catch (error) {
+    // If an error occurs during bulk creation, throw an error with a specific message
     throw new Error('Error creating bulk inventory items')
   }
 }
 
-export { getAllInventory, createBulkInventory }
+export { getAllInventory, createBulkInventory, createInventoryItem }
