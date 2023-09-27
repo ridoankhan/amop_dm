@@ -1,14 +1,14 @@
 import Fastify from 'fastify'
 import { connectToDatabase } from './config/database.config'
 import { inventoryRoutes } from './modules/inventory/inventory.route'
-import errorHandlerPlugin from './middlewares/error.middleware'
+import httpStatus from 'http-status'
 import cors from '@fastify/cors'
 import fastifyRateLimit from '@fastify/rate-limit'
 import helmet from '@fastify/helmet'
 const fastifyMongoDbSanitizer = require('fastify-mongodb-sanitizer')
 import config from './config/config'
 import { logger } from './modules/logger'
-
+// import { ApiError, errorConverter, errorHandler } from './modules/errors'
 import { blue, bold, underline } from 'colorette'
 
 // Create a Fastify instance with logging enabled
@@ -44,8 +44,16 @@ fastify.register(fastifyRateLimit, {
 // Register the inventory routes with a prefix
 fastify.register(inventoryRoutes, { prefix: '/api/inventory' })
 
-// Register an error handling plugin/middleware
-fastify.register(errorHandlerPlugin)
+// send back a 404 error for any unknown api request
+// fastify.register((_req, _res, next) => {
+//   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'))
+// })
+
+// // convert error to ApiError, if needed
+// fastify.register(errorConverter)
+
+// // Register the error handling plugin
+// fastify.register(errorHandlingPlugin)
 
 // Start the server
 const PORT: number = config.port || 5000

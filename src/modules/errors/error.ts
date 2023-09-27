@@ -1,41 +1,45 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Request, Response, NextFunction } from 'express'
-import mongoose from 'mongoose'
+import { FastifyInstance, FastifyError } from 'fastify'
 import httpStatus from 'http-status'
 import config from '../../config/config'
 import { logger } from '../logger'
 import ApiError from './ApiError'
+import mongoose from 'mongoose'
 
-export const errorConverter = (err: any, _req: Request, _res: Response, next: NextFunction) => {
-  let error = err
+// Error converter middleware
+export const errorConverter = (error: FastifyError, request: any, reply: any) => {
   if (!(error instanceof ApiError)) {
-    const statusCode =
-      error.statusCode || error instanceof mongoose.Error ? httpStatus.BAD_REQUEST : httpStatus.INTERNAL_SERVER_ERROR
+    const isMongooseError = error instanceof mongoose.Error
+    const statusCode = isMongooseError
+      ? httpStatus.BAD_REQUEST // You can customize this for Mongoose errors
+      : error.validation || error.validationContext
+      ? httpStatus.BAD_REQUEST
+      : httpStatus.INTERNAL_SERVER_ERROR
     const message: string = error.message || `${httpStatus[statusCode]}`
-    error = new ApiError(statusCode, message, false, err.stack)
+    const newError = new ApiError(statusCode, message, false, error.stack)
+    request.log.error(newError)
+    error = newError
   }
-  next(error)
+  reply.send(error)
 }
 
-// eslint-disable-next-line no-unused-vars
-export const errorHandler = (err: ApiError, _req: Request, res: Response, _next: NextFunction) => {
-  let { statusCode, message } = err
-  if (config.env === 'production' && !err.isOperational) {
+// Error handler middleware
+export const errorHandler = (error: ApiError, request: any, reply: any) => {
+  let { statusCode, message } = error
+  if (config.env === 'production' && !error.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR
     message = 'Internal Server Error'
   }
 
-  res.locals['errorMessage'] = err.message
-
-  const response = {
+  // Set response status code and error message
+  reply.status(statusCode).send({
     code: statusCode,
     message,
-    ...(config.env === 'development' && { stack: err.stack }),
-  }
+    ...(config.env === 'development' && { stack: error.stack }),
+  })
+}
 
-  if (config.env === 'development') {
-    logger.error(err)
-  }
-
-  res.status(statusCode).send(response)
+// Register error handling plugins
+export const registerErrorHandlers = (fastify: FastifyInstance) => {
+  fastify.setErrorHandler(errorConverter)
+  fastify.setErrorHandler(errorHandler)
 }

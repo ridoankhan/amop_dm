@@ -16,7 +16,7 @@ import pick from '../../utils/pick'
  * @returns {Promise<void>}
  */
 export const getAllInventoryHandler = async (
-  request: FastifyRequest<{ Querystring: Record<string, any> }>, // Specify the type of Querystring
+  request: FastifyRequest<{ Querystring: Record<string, any> }>,
   reply: FastifyReply,
 ): Promise<void> => {
   try {

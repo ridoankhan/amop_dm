@@ -1,6 +1,8 @@
 import { Inventory } from './inventory.model'
 import { InventoryType } from './inventory.type'
 import { IOptions, QueryResult } from '../paginate/paginate'
+import ApiError from '../errors/ApiError'
+import httpStatus from 'http-status'
 
 /**
  * Create a single inventory item in the database.
@@ -15,7 +17,8 @@ const createInventoryItem = async (data: InventoryType): Promise<InventoryType> 
     return inventory
   } catch (error) {
     // If an error occurs during creation, throw an error with a specific message
-    throw new Error('Error creating inventory item')
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error creating inventory item')
+    // throw new Error('Error creating inventory item')
   }
 }
 
