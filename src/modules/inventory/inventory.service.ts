@@ -1,6 +1,6 @@
 import { Inventory } from './inventory.model'
 import { InventoryType } from './inventory.type'
-import { IOptions, QueryResult } from '../paginate/paginate'
+import { IOptions, QueryResult, paginate } from '../paginate/paginate'
 
 /**
  * Create a single inventory item in the database.
@@ -35,6 +35,17 @@ const getAllInventory = async (filter: Record<string, any>, options: IOptions): 
     throw new Error('Error fetching inventory data')
   }
 }
+
+// const getAllInventory = async (): Promise<InventoryType[]> => {
+//   try {
+//     // Fetch all inventory items from the database
+//     const inventory = await Inventory.find().exec()
+//     return inventory
+//   } catch (error) {
+//     // If an error occurs during fetching, throw an error with a specific message
+//     throw new Error('Error fetching inventory data')
+//   }
+// }
 
 /**
  * Create multiple inventory items in bulk.
