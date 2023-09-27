@@ -3,8 +3,10 @@ import { connectToDatabase } from './config/database.config'
 import { inventoryRoutes } from './modules/inventory/inventory.route'
 import errorHandlerPlugin from './middlewares/error.middleware'
 import cors from '@fastify/cors'
+import helmet from '@fastify/helmet'
 const fastifyMongoDbSanitizer = require('fastify-mongodb-sanitizer')
 import config from './config/config'
+import { logger } from './modules/logger'
 
 import { blue, bold, underline } from 'colorette'
 
@@ -20,6 +22,8 @@ fastify.register(cors, {
   credentials: true,
 })
 
+fastify.register(helmet, { contentSecurityPolicy: false, global: true })
+
 const fastifyMongodbsanitizerOptions = {
   params: true,
   query: true,
@@ -27,11 +31,9 @@ const fastifyMongodbsanitizerOptions = {
 }
 
 // Define a simple route for the root endpoint
-fastify
-  .register(fastifyMongoDbSanitizer, fastifyMongodbsanitizerOptions)
-  .get('/', async (request, reply) => {
-    return { message: 'Welcome to AMOP Device Management API' }
-  })
+fastify.register(fastifyMongoDbSanitizer, fastifyMongodbsanitizerOptions).get('/', async (request, reply) => {
+  return { message: 'Welcome to AMOP Device Management API' }
+})
 
 // Register the inventory routes with a prefix
 fastify.register(inventoryRoutes, { prefix: '/api/inventory' })
@@ -50,10 +52,9 @@ const start = async () => {
       },
       (err, address) => {
         if (err) throw err
-        console.log(
-          underline(blue(bold(`Listening on: http://localhost:${PORT}`)))
-        )
-      }
+        logger.info(underline(blue(bold(`Listening on: http://localhost:${PORT}`))))
+        // console.log(underline(blue(bold(`Listening on: http://localhost:${PORT}`))))
+      },
     )
     await connectToDatabase()
   } catch (err) {

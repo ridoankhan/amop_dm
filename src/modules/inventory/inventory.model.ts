@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
-interface InventoryDocument extends Document {
+export interface InventoryDocument extends Document {
   provider: string
   customer: string
   iccid: number
@@ -58,10 +58,7 @@ const inventorySchema: Schema<InventoryDocument> = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 )
 
-export const Inventory = mongoose.model<InventoryDocument>(
-  'Inventory',
-  inventorySchema
-)
+export const Inventory = mongoose.model<InventoryDocument>('Inventory', inventorySchema)
