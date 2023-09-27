@@ -1,6 +1,6 @@
 import { Inventory } from './inventory.model'
 import { InventoryType } from './inventory.type'
-import { IOptions, QueryResult, paginate } from '../paginate/paginate'
+import { IOptions, QueryResult } from '../paginate/paginate'
 
 /**
  * Create a single inventory item in the database.
