@@ -1,0 +1,5 @@
+1. Implemented eslint, prettier, husky
+2. implemented pagination, toJSON for the mongoDB document datas
+3. implemented rate limiter
+4. implemented code coverage
+5. implemented feature to input 50000 data inside the database

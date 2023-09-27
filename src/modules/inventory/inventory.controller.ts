@@ -3,6 +3,10 @@ import httpStatus from 'http-status'
 import ApiError from '../../utils/errors/ApiError'
 import { getAllInventory, createBulkInventory } from './inventory.service'
 import { InventoryType } from './inventory.type'
+import { QueryResult } from '../paginate'
+import { Inventory } from './inventory.model'
+import { IOptions } from '../paginate'
+import pick from '../../utils/pick'
 
 /**
  * Controller method for retrieving all inventory items.
@@ -11,10 +15,16 @@ import { InventoryType } from './inventory.type'
  * @param {FastifyReply} reply - The Fastify reply object.
  * @returns {Promise<void>}
  */
-export const getAllInventoryHandler = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+export const getAllInventoryHandler = async (
+  request: FastifyRequest<{ Querystring: Record<string, any> }>, // Specify the type of Querystring
+  reply: FastifyReply,
+): Promise<void> => {
   try {
-    // Fetch all inventory items from the service
-    const inventory = await getAllInventory()
+    const filter = pick(request.query, ['name', 'role'])
+    const options: IOptions = pick(request.query, ['sortBy', 'limit', 'page', 'projectBy'])
+
+    // Fetch all inventory items from the service with pagination
+    const inventory: QueryResult = await Inventory.paginate(filter, options)
 
     // Respond with a success status code and the retrieved inventory data
     reply.code(httpStatus.OK).send(inventory)

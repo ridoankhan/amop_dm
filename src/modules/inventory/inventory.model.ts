@@ -1,4 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Document, Model } from 'mongoose'
+import toJSON from '../toJSON/toJSON'
+import paginate, { QueryResult, IOptions } from '../paginate/paginate'
 
 export interface InventoryDocument extends Document {
   provider: string
@@ -61,4 +63,12 @@ const inventorySchema: Schema<InventoryDocument> = new Schema(
   },
 )
 
-export const Inventory = mongoose.model<InventoryDocument>('Inventory', inventorySchema)
+// Add plugin that converts mongoose to json
+inventorySchema.plugin(toJSON)
+
+// Add paginate plugin
+inventorySchema.plugin(paginate)
+
+export const Inventory = mongoose.model<InventoryDocument>('Inventory', inventorySchema) as Model<InventoryDocument> & {
+  paginate: (filter: Record<string, any>, options: IOptions) => Promise<QueryResult>
+}
