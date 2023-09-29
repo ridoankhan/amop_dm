@@ -1,22 +1,29 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import path from 'path'
+import mongoose from 'mongoose'
 import { faker } from '@faker-js/faker'
 import { Inventory, InventoryDocument } from '../src/modules/inventory/inventory.model'
-import config from '../src/config/config'
+import * as dotenv from 'dotenv'
+
+dotenv.config({ path: path.join(__dirname, '../.env') })
+
+const mongoDBUrl = process.env.MONGODB_URL!
 
 // Connect to MongoDB
-mongoose.connect(config.database.url)
+mongoose.connect(mongoDBUrl)
 
 // Function to generate random Inventory data
 function generateRandomInventory() {
   return {
-    provider: faker.company.name() + '.llc',
+    // provider: faker.company.name() + '.llc',
+    provider: faker.helpers.arrayElement(['at&t', 'verizon']),
     customer: faker.person.fullName(),
-    iccid: faker.number.int(),
-    imei: faker.number.int(),
-    ip: faker.internet.ip(),
+    iccid: String(faker.number.int()),
+    imei: String(faker.number.int()),
+    ip: faker.internet.ipv4(),
     mac: faker.internet.mac(),
-    license: faker.helpers.arrayElement(['active', 'inactive', 'pending']),
-    manufacturer: faker.helpers.arrayElement(['BECentral', 'CradlePoint', 'ReadyNet']),
+    license: faker.helpers.arrayElement(['License Expired', 'License Expires in 30 days or less']),
+    // manufacturer: faker.helpers.arrayElement(['BECentral', 'CradlePoint', 'ReadyNet']),
+    manufacturer: faker.helpers.arrayElement(['BEC_Technologies', 'Cradlepoint', 'ReadyNet']),
     status: faker.helpers.arrayElement(['Active', 'Suspended', 'Inactive']),
     lastconnect: faker.date.past(),
   }
@@ -25,7 +32,7 @@ function generateRandomInventory() {
 // Insert 50,000 random Inventory records
 async function seedDatabase() {
   const inventoriesToInsert = []
-  const totalRecords = 50000
+  const totalRecords = 1
 
   for (let i = 0; i < totalRecords; i++) {
     let randomInventory = generateRandomInventory()
