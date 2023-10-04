@@ -48,6 +48,7 @@
     "colorette": "^2.0.20",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
+    "eslint-config-prettier": "^9.0.0",
     "faker": "^6.6.6",
     "fastify": "^4.23.0",
     "fastify-mongodb-sanitizer": "^1.2.2",
