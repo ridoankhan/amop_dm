@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
-import config = require('./config')
 import { yellow, bold, underline } from 'colorette'
+import config = require('./config')
 import { logger } from '../modules/logger'
 
 // Function to connect to the MongoDB database
-export const connectToDatabase = async () => {
+const connectToDatabase = async () => {
   try {
     // Connect to MongoDB using the MONGODB_URL from the config
     await mongoose.connect(config.database.url)
@@ -16,3 +16,5 @@ export const connectToDatabase = async () => {
     process.exit(1)
   }
 }
+
+export default connectToDatabase

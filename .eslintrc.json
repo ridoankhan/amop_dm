@@ -27,10 +27,11 @@
         "project": ["./tsconfig.json"]
       },
       "rules": {
-        "no-console": "error",
+        "no-console": "off",
         "func-names": "off",
         "no-underscore-dangle": "off",
-        "consistent-return": "off"
+        "consistent-return": "off",
+        "no-await-in-loop": "off"
       }
     }
   ]

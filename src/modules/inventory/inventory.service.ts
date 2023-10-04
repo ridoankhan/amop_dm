@@ -1,8 +1,8 @@
+import httpStatus from 'http-status'
 import { Inventory } from './inventory.model'
 import { InventoryType } from './inventory.type'
 import { IOptions, QueryResult } from '../paginate/paginate'
 import ApiError from '../errors/ApiError'
-import httpStatus from 'http-status'
 
 /**
  * Create a single inventory item in the database.
@@ -61,6 +61,7 @@ const createBulkInventory = async (data: InventoryType[]): Promise<InventoryType
     const createdInventoryItems: InventoryType[] = []
 
     // Iterate through the data and create each inventory item
+    // eslint-disable-next-line no-restricted-syntax
     for (const itemData of data) {
       const inventoryItem = await createInventoryItem(itemData)
       createdInventoryItems.push(inventoryItem)

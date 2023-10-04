@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import pino from 'pino'
 import { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify'
 

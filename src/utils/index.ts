@@ -1,3 +1,3 @@
 import pick from './pick'
 
-export { pick }
+export default pick

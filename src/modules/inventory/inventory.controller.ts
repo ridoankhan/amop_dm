@@ -1,11 +1,10 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import httpStatus from 'http-status'
-import ApiError from '../../utils/errors/ApiError'
+import ApiError from '../errors/ApiError'
 import { getAllInventory, createBulkInventory } from './inventory.service'
 import { InventoryType } from './inventory.type'
-import { QueryResult } from '../paginate'
+import { QueryResult, IOptions } from '../paginate'
 import { Inventory } from './inventory.model'
-import { IOptions } from '../paginate'
 import pick from '../../utils/pick'
 
 /**
