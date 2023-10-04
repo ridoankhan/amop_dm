@@ -23,9 +23,11 @@ const createInventoryItem = async (data: InventoryType): Promise<InventoryType> 
 }
 
 /**
- * Retrieve all inventory items from the database.
+ * Retrieve all inventory items from the database with pagination.
  *
- * @returns {Promise<InventoryType[]>} - A promise that resolves to an array of inventory items.
+ * @param {Record<string, any>} filter - Filtering options.
+ * @param {IOptions} options - Pagination and sorting options.
+ * @returns {Promise<QueryResult>} - A promise that resolves to a paginated result of inventory items.
  */
 const getAllInventory = async (filter: Record<string, any>, options: IOptions): Promise<QueryResult> => {
   try {
@@ -35,10 +37,9 @@ const getAllInventory = async (filter: Record<string, any>, options: IOptions): 
     return inventory
   } catch (error) {
     // If an error occurs during fetching, throw an error with a specific message
-    throw new Error('Error fetching inventory data')
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error fetching inventory data')
   }
 }
-
 // const getAllInventory = async (): Promise<InventoryType[]> => {
 //   try {
 //     // Fetch all inventory items from the database

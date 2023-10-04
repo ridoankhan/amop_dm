@@ -4,7 +4,6 @@ import ApiError from '../errors/ApiError'
 import { getAllInventory, createBulkInventory } from './inventory.service'
 import { InventoryType } from './inventory.type'
 import { QueryResult, IOptions } from '../paginate'
-import { Inventory } from './inventory.model'
 import pick from '../../utils/pick'
 
 /**
@@ -23,7 +22,7 @@ export const getAllInventoryHandler = async (
     const options: IOptions = pick(request.query, ['sortBy', 'limit', 'page', 'projectBy'])
 
     // Fetch all inventory items from the service with pagination
-    const inventory: QueryResult = await Inventory.paginate(filter, options)
+    const inventory: QueryResult = await getAllInventory(filter, options)
 
     // Respond with a success status code and the retrieved inventory data
     reply.code(httpStatus.OK).send(inventory)
