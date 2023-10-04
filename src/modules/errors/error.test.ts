@@ -116,7 +116,7 @@ describe('Error middlewares', () => {
       errorHandler(error, httpMocks.createRequest(), res, next)
 
       expect(sendSpy).toHaveBeenCalledWith(expect.objectContaining({ code: error.statusCode, message: error.message }))
-      expect(res.locals['errorMessage']).toBe(error.message)
+      expect(res.locals.errorMessage).toBe(error.message)
     })
 
     test('should put the error stack in the response if in development mode', () => {
@@ -131,7 +131,7 @@ describe('Error middlewares', () => {
       expect(sendSpy).toHaveBeenCalledWith(
         expect.objectContaining({ code: error.statusCode, message: error.message, stack: error.stack }),
       )
-      config.env = process.env['NODE_ENV'] as typeof config.env
+      config.env = process.env.NODE_ENV as typeof config.env
     })
 
     test('should send internal server error status and message if in production mode and error is not operational', () => {
@@ -149,8 +149,8 @@ describe('Error middlewares', () => {
           message: httpStatus[httpStatus.INTERNAL_SERVER_ERROR],
         }),
       )
-      expect(res.locals['errorMessage']).toBe(error.message)
-      config.env = process.env['NODE_ENV'] as typeof config.env
+      expect(res.locals.errorMessage).toBe(error.message)
+      config.env = process.env.NODE_ENV as typeof config.env
     })
 
     test('should preserve original error status and message if in production mode and error is operational', () => {
@@ -168,7 +168,7 @@ describe('Error middlewares', () => {
           message: error.message,
         }),
       )
-      config.env = process.env['NODE_ENV'] as typeof config.env
+      config.env = process.env.NODE_ENV as typeof config.env
     })
   })
 })

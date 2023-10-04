@@ -1,14 +1,15 @@
 import { FastifyInstance, FastifyError } from 'fastify'
 import httpStatus from 'http-status'
-import config from '../../config/config'
-import { logger } from '../logger'
-import ApiError from './ApiError'
 import mongoose from 'mongoose'
+import config from '../../config/config'
+// import { logger } from '../logger'
+import ApiError from './ApiError'
 
 // Error converter middleware
 export const errorConverter = (error: FastifyError, request: any, reply: any) => {
   if (!(error instanceof ApiError)) {
     const isMongooseError = error instanceof mongoose.Error
+    // eslint-disable-next-line no-nested-ternary
     const statusCode = isMongooseError
       ? httpStatus.BAD_REQUEST // You can customize this for Mongoose errors
       : error.validation || error.validationContext
@@ -17,6 +18,7 @@ export const errorConverter = (error: FastifyError, request: any, reply: any) =>
     const message: string = error.message || `${httpStatus[statusCode]}`
     const newError = new ApiError(statusCode, message, false, error.stack)
     request.log.error(newError)
+    // eslint-disable-next-line no-param-reassign
     error = newError
   }
   reply.send(error)
