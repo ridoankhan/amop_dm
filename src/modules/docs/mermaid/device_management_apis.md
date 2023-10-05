@@ -1,9 +1,21 @@
-```mermaid
+%%{
+init: {
+'theme': 'base',
+'themeVariables': {
+'primaryColor': '#3498db', // Primary color (e.g., for headings)
+'primaryTextColor': '#fff', // Text color on primary background
+'primaryBorderColor': '#2c3e50', // Border color for primary elements
+'lineColor': '#f1c40f', // Color for lines or separators
+'secondaryColor': '#2ecc71', // Secondary color (e.g., for buttons)
+'tertiaryColor': '#ecf0f1' // Tertiary color (e.g., for backgrounds)
+}
+}
+}%%
 flowchart BT
-    Internal_API-->BEC
-    Internal_API-->CradlePoint
-    Internal_API-->ReadyNet
-    amop_website --> Internal_API
+%% Internal_API-->BEC
+%% Internal_API-->CradlePoint
+%% Internal_API-->ReadyNet
+amop_website --> Internal_API
 
     subgraph Internal_API
         direction LR
@@ -110,4 +122,3 @@ flowchart BT
          ---Retrieve-current-system-configuration-of-a-router
          ---Edit-a-router-system-configuration
     end
-```
