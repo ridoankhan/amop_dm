@@ -75,4 +75,40 @@ const createBulkInventory = async (data: InventoryType[]): Promise<InventoryType
   }
 }
 
-export { getAllInventory, createBulkInventory, createInventoryItem }
+/**
+ * Search for inventory items based on a query string.
+ *
+ * @param {string} query - The search query.
+ * @returns {Promise<InventoryType[]>} - A promise that resolves to an array of matching inventory items.
+ */
+const searchInventory = async (query: string): Promise<InventoryType[]> => {
+  try {
+    // Construct a query using $or operator to search across multiple columns
+    const searchQuery = {
+      $or: [
+        { provider: { $regex: new RegExp(query, 'i') } },
+        { customer: { $regex: new RegExp(query, 'i') } },
+        { iccid: { $regex: new RegExp(query, 'i') } },
+        { imei: { $regex: new RegExp(query, 'i') } },
+        { ip: { $regex: new RegExp(query, 'i') } },
+        { mac: { $regex: new RegExp(query, 'i') } },
+        { license: { $regex: new RegExp(query, 'i') } },
+        { manufacturer: { $regex: new RegExp(query, 'i') } },
+        { status: { $regex: new RegExp(query, 'i') } },
+      ],
+    }
+
+    // Log the search query for debugging purposes
+    console.log('Search Query:', searchQuery)
+
+    // Use the find method to search for inventory items
+    const inventory = await Inventory.find(searchQuery).exec()
+
+    return inventory
+  } catch (error) {
+    console.error('Error searching inventory:', error)
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error searching inventory')
+  }
+}
+
+export { getAllInventory, createBulkInventory, createInventoryItem, searchInventory }

@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import httpStatus from 'http-status'
 import ApiError from '../errors/ApiError'
-import { getAllInventory, createBulkInventory } from './inventory.service'
+import { getAllInventory, createBulkInventory, searchInventory } from './inventory.service'
 import { InventoryType } from './inventory.type'
 import { QueryResult, IOptions } from '../paginate'
 import pick from '../../utils/pick'
@@ -75,6 +75,37 @@ export const createBulkInventoryHandler = async (request: FastifyRequest, reply:
     if (!inventoryItems) throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create inventory')
     // Respond with a success status code and a message indicating successful creation
     reply.code(httpStatus.CREATED).send({ status: 'success', message: 'Records created successfully' })
+  } catch (error) {
+    console.error(error)
+
+    // Handle errors and send appropriate responses
+    if (error instanceof ApiError) {
+      reply.code(error.statusCode).send(error.message)
+    } else {
+      reply.code(httpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
+    }
+  }
+}
+
+/**
+ * Controller method for global search across all inventory columns.
+ *
+ * @param {FastifyRequest} request - The Fastify request object.
+ * @param {FastifyReply} reply - The Fastify reply object.
+ * @returns {Promise<void>}
+ */
+export const searchInventoryHandler = async (
+  request: FastifyRequest<{ Params: { query: string } }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  try {
+    const { query } = request.params
+
+    // Call the service function to search for inventory items
+    const inventory = await searchInventory(query)
+
+    // Respond with a success status code and the retrieved inventory data
+    reply.code(httpStatus.OK).send(inventory)
   } catch (error) {
     console.error(error)
 

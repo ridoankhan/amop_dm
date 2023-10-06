@@ -3,6 +3,7 @@ import {
   // createInventoryItemHandler,
   getAllInventoryHandler,
   createBulkInventoryHandler,
+  searchInventoryHandler,
 } from './inventory.controller'
 
 const inventoryRoutes = (fastify: FastifyInstance, options: any, done: () => void) => {
@@ -14,6 +15,9 @@ const inventoryRoutes = (fastify: FastifyInstance, options: any, done: () => voi
 
   // Register a GET route for retrieving a list of inventory items
   fastify.get('/list', options, getAllInventoryHandler)
+
+  // route for global search
+  fastify.get('/search/:query', options, searchInventoryHandler)
 
   // Indicate that route registration is complete
   done()
