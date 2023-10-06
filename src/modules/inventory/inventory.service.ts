@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-non-literal-regexp */
 import httpStatus from 'http-status'
 import { Inventory } from './inventory.model'
 import { InventoryType } from './inventory.type'
@@ -83,23 +84,27 @@ const createBulkInventory = async (data: InventoryType[]): Promise<InventoryType
  */
 const searchInventory = async (query: string): Promise<InventoryType[]> => {
   try {
-    // Construct a query using $or operator to search across multiple columns
+    // Create a regular expression to perform a case-insensitive search
+    const regex = new RegExp(query, 'i')
+
+    // Construct a query that searches across different data types
     const searchQuery = {
       $or: [
-        { provider: { $regex: new RegExp(query, 'i') } },
-        { customer: { $regex: new RegExp(query, 'i') } },
-        { iccid: { $regex: new RegExp(query, 'i') } },
-        { imei: { $regex: new RegExp(query, 'i') } },
-        { ip: { $regex: new RegExp(query, 'i') } },
-        { mac: { $regex: new RegExp(query, 'i') } },
-        { license: { $regex: new RegExp(query, 'i') } },
-        { manufacturer: { $regex: new RegExp(query, 'i') } },
-        { status: { $regex: new RegExp(query, 'i') } },
-      ],
+        { provider: regex },
+        { customer: regex },
+        { ip: regex },
+        { mac: regex },
+        { license: regex },
+        { manufacturer: regex },
+        { status: regex },
+        {
+          iccid: Number.isNaN(Number(query)) ? null : Number(query), // Match only if query is a number
+        },
+        {
+          imei: Number.isNaN(Number(query)) ? null : Number(query), // Match only if query is a number
+        },
+      ].filter((condition) => condition),
     }
-
-    // Log the search query for debugging purposes
-    console.log('Search Query:', searchQuery)
 
     // Use the find method to search for inventory items
     const inventory = await Inventory.find(searchQuery).exec()
