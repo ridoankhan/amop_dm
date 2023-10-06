@@ -5,7 +5,7 @@ init: {
 'primaryColor': '#3498db', // Primary color (e.g., for headings)
 'primaryTextColor': '#fff', // Text color on primary background
 'primaryBorderColor': '#2c3e50', // Border color for primary elements
-'lineColor': '#f1c40f', // Color for lines or separators
+'lineColor': 'red', // Color for lines or separators
 'secondaryColor': '#2ecc71', // Secondary color (e.g., for buttons)
 'tertiaryColor': '#ecf0f1' // Tertiary color (e.g., for backgrounds)
 }
@@ -15,110 +15,114 @@ flowchart BT
 %% Internal_API-->BEC
 %% Internal_API-->CradlePoint
 %% Internal_API-->ReadyNet
-amop_website --> Internal_API
+%% amop_website --> Internal_API
 
     subgraph Internal_API
-        direction LR
+        direction BT
         Device_API
-        ---Device_CMD_API
-        ---User_API
-        ---GPS_API
-        ---License_Management_API
-        ---Report_Generation_API
-        ---Alert_API
-        ---Bandwidth_API
-        ---Group_API
-        ---Synchronizations
+        Device_CMD_API
+        User_API
+        Manufacturer_API
+        Report_Generation_API
+        Alert_API
+        Bandwidth_API
+        Group_API
+        Synchronizations
+        amop_website --> Device_API
+        amop_website --> Device_CMD_API
+        amop_website --> User_API
+        amop_website --> Manufacturer_API
+        amop_website --> Report_Generation_API
+        amop_website --> Alert_API
+        amop_website --> Bandwidth_API
+        amop_website --> Group_API
+        amop_website --> Synchronizations
     end
 
     subgraph Device_API
-         direction TB
-         Get-All-Device-List
-         ---Get-Device-Info-ById
-         ---Update-Device_Info_ById
-         ---Count-DeviceLists-Based-on-Filter
-         ---Move-multiple-devices-to-assigned-owner
-         ---Delete-multiple-routers
-         ---Retrieve-all-routers-information-based-on-provided-conditions
-         ---Add-Edit-a-router's-address
-         ---List-connected-devices-by-carrier
-         ---Connected-device-by-model
-         ---Connected-device-by-network-type
-         ---Assign-multiple-tags-to-multiple-devices
-         ---Assign-tags-to-one-device
-         ---Get-the-tags-per-device
-         ---Get-no-of-online-devices
-         ---Get-no-of-offline-devices
+        direction LR
+        /devices
+        /devices/info
+        /devices/update
+        /devices/count
+        /devices/move
+        /devices/delete
+        /devices/retrieve
+        /devices/address
+        /devices/connected
+        /devices/connected-by-model
+        /devices/connected-by-network-type
+        /devices/tags/assign-multiple
+        /devices/tags/assign-one
+        /devices/tags/get-per
+        /devices/online
+        /devices/offline
+        /devices/gps-location
     end
 
     subgraph Device_CMD_API
-         direction TB
-         Retrieve-a-router's-network-information
-         ---Send-reboot-command-to-router(s)
-         ---Push-the-configuration-to-router
-         ---Update-the-firmware-of-one-or-more-routers
+        direction LR
+        /devices/cmd/retrieve-network-info
+        /devices/cmd/reboot
+        /devices/cmd/push-configuration
+        /devices/cmd/update-firmware
     end
 
     subgraph User_API
-         direction TB
-         Get-API-Keys
-         ---login
-         ---registration
-         ---forget-password
-         ---verify-email
+        direction LR
+        /users/api-keys
+        /users/login
+        /users/registration
+        /users/forget-password
+        /users/verify-email
     end
 
-    subgraph GPS_API
-         direction TB
-         Get-the-GPS-location-of-the-device
-    end
-
-    subgraph License_Management_API
-         direction TB
-         Assign-the-license-to-the-device
-         ---Assign-the-bulk-license-to-the-device
-         ---Transfer-the-license-from-one-device-to-another
-         ---Renew-the-device-license
-         ---delete-the-device-license
-         ---Delete-device-License-in-Bulk
-         ---Retrieve-the-user's-license-details
+    subgraph Manufacturer_API
+        direction LR
+        /devices/license/assign
+        /devices/license/assign-bulk
+        /devices/license/transfer
+        /devices/license/renew
+        /devices/license/delete
+        /devices/license/delete-bulk
+        /devices/license/user-details
     end
 
     subgraph Report_Generation_API
-         direction TB
-         Generate-a-report-of-routers
-         ---Create-Edit-a-report-of-a-user
+        direction LR
+        /reports/generate
+        /reports/user-report
     end
 
     subgraph Alert_API
-         direction TB
-         Enable-types-of-alerts-for-a-router
-         ---Get-current-alert-info-of-a-router
+        direction LR
+        /alerts/enable
+        /alerts/current-info
     end
 
     subgraph Bandwidth_API
-         direction TB
-         Retreive-bandwidth-usage-of-device-with-range
-         ---Retreive-bandwidth-usage-of-device-only-with-MAC
+        direction LR
+        /bandwidth/usage-with-range
+        /bandwidth/usage-by-mac
     end
 
     subgraph Group_API
-         direction TB
-         Create-group
-         ---Get-all-groups
-         ---Get-group-by-Id
-         ---update-a-group-information
-         ---delete-gorup
-         ---bulk-delete-groups
-         ---Count-devices-of-a-group
-         ---create-a-plan-for-a-group
-         ---get-update-delte-plan-for-a-group
+        direction LR
+        /groups/create
+        /groups/all
+        /groups/by-id
+        /groups/update
+        /groups/delete
+        /groups/delete-bulk
+        /groups/device-count
+        /groups/plan-create
+        /groups/plan-update-delete
     end
 
     subgraph Synchronizations
-         direction TB
-         Retrieve-Ping-status-on-the-router
-         ---Delete-an-entry-in-the-router-system-configuration
-         ---Retrieve-current-system-configuration-of-a-router
-         ---Edit-a-router-system-configuration
+        direction LR
+        /synchronizations/ping-status
+        /synchronizations/delete-entry
+        /synchronizations/current-configuration
+        /synchronizations/edit-configuration
     end
