@@ -1,8 +1,11 @@
 import Fastify from 'fastify'
+import path from 'path'
 import { blue, bold, underline } from 'colorette'
 import helmet from '@fastify/helmet'
 import cors from '@fastify/cors'
 import fastifyRateLimit from '@fastify/rate-limit'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import fastifyStatic from '@fastify/static'
 import connectToDatabase from './config/database.config'
 import inventoryRoutes from './modules/inventory/inventory.route'
 import config from './config/config'
@@ -31,9 +34,14 @@ const fastifyMongodbsanitizerOptions = {
   body: true,
 }
 
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, 'public'),
+})
+
 // Define a simple route for the root endpoint
-fastify.register(fastifyMongoDbSanitizer, fastifyMongodbsanitizerOptions).get('/', async () => {
-  return { message: 'Welcome to AMOP Device Management API' }
+fastify.register(fastifyMongoDbSanitizer, fastifyMongodbsanitizerOptions).get('/', async (request, reply) => {
+  reply.sendFile('index.html')
+  // return { message: 'Welcome to AMOP Device Management API' }
 })
 
 fastify.register(fastifyRateLimit, {
