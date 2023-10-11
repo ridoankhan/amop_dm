@@ -15,364 +15,91 @@ flowchart BT
 
 amop_website --> Device_API
 
-subgraph Internal_API
+subgraph Internal_API["<font size=24>Internal_API"]
 direction BT
 Device_API
-Device_CMD_API
 User_API
 Manufacturer_API
-Report_Generation_API
-Alert_API
-Bandwidth_API
-Group_API
-Synchronizations
-amop_website --> Device_API
-amop_website --> Device_CMD_API
+Notification_API
+
 amop_website --> User_API
 amop_website --> Manufacturer_API
-amop_website --> Report_Generation_API
-amop_website --> Alert_API
-amop_website --> Bandwidth_API
-amop_website --> Group_API
-amop_website --> Synchronizations
+amop_website --> Notification_API
 end
 
 subgraph Device_API
 direction LR
-GET1[GET]--200 OK-->/devices
-GET1[GET]--200 OK-->A["/deviceLists/{device_id}"]
-PATCH1[PATCH]--200 OK-->B["/deviceLists/{device_id}"]
-GET1[GET]--200 OK-->/deviceLists/count
-PUT1[PUT]--200 OK-->/deviceLists/bulkUpdateDevices
-DELETE1[DELETE]--200 OK-->/deviceLists/bulkDelDevices
-GET1[GET]--200 OK-->C["/deviceLists/{pci}/{rfvalue}/DeviceAnalysis"]
-POST1[POST]--201 Created-->/deviceLists/geoDevice
-GET1[GET]--200 OK-->/deviceLists/devCarrierSummary
-GET1[GET]--200 OK-->/deviceLists/devModelSummary
-GET1[GET]--200 OK-->/deviceLists/devNetModeSummary
-POST1[POST]--200 OK-->/deviceLists/updateMultiTags
-PATCH1[PATCH]--200 OK-->E["/deviceLists/{device_id}/updateTags"]
-GET1[GET]--200 OK-->F["/deviceLists/{device_id}/tags"]
-GET1[GET]--200 OK-->/deviceLists/online
-GET1[GET]--200 OK-->/deviceLists/offline
-GET1[GET]--200 OK-->/deviceLists/gps-location
-end
+device_API_GET[GET]--200 OK-->getAllDeviceList["/devices"]
+device_API_GET[GET]--200 OK-->getDeviceInfoById["/devices/status/{device_id}"]
+device_API_PATCH[PATCH]--200 OK-->updateDeviceInfoById["/devices/{device_id}"]
+device_API_GET[GET]--200 OK-->countDeviceListsBasedOnFilter["/devices/count"]
+device_API_PUT[PUT]--200 OK-->moveMultipleDevicesToTheAssignedOwner["/devices/bulk"]
+device_API_DELETE[DELETE]--200 OK-->deleteMultipleRouters["/devices/bulk"]
+device_API_GET[GET]--200 OK-->retrieveAllRoutersInformationBasedOnProvidedConditions["/devices/{pci}/{rfvalue}/analysis"]
+device_API_POST[POST]--201 Created--> addOrEditRouterAddress["/devices/geo-location"]
+device_API_GET[GET]--200 OK-->listConnectedDevicesByCarrier["/devices/list/carrier"]
+device_API_GET[GET]--200 OK--> connectedDeviceByModel["/devices/model/list"]
+device_API_GET[GET]--200 OK-->connectedDeviceByNetworkType["/devices/network/list"]
+device_API_POST[POST]--200 OK-->assignMultipleTagsToMultipleDevice["/devices/tags/multiple"]
+device_API_PATCH[PATCH]--200 OK--> assignTagsToOneDevice["/devices/tags/update/{device_id}"]
+device_API_GET[GET]--200 OK-->getTheTagsByDeviceId["/devices/tags/{device_id}"]
+device_API_GET[GET]--200 OK-->getNoOfOnlineDevices["/devices/online"]
+device_API_GET[GET]--200 OK-->getNoOfOfflineDevices["/devices/offline"]
+device_API_GET[GET]--200 OK-->getTheGPSLocationByMAC["/devices/gps-location/{MAC}"]
+device_API_GET[GET]--200 OK-->getDeviceConfiguationByMAC["/devices/configurations/{MAC}"]
+device_API_PATCH[PATCH]--200 OK-->updateDeviceConfigurationByMAC["/devices/configurations/{MAC}"]
+device_API_GET[GET]--200 OK-->retreiveBandwidthUsageOfDeviceWithRange["/devices/usages/bandwidth/{MAC}/{start}/{end}"]
+device_API_GET[GET]--200 OK-->retreiveBandwidthUsageOfDeviceByMAC["/devices/usages/bandwidth/{MAC}"]
 
-subgraph Device_CMD_API
-direction LR
-GET2[GET]--200 OK-->G["/DeviceCmds/{MAC}/{wifiEnable}/networkDevices"]
-POST2[POST]--201 Created-->/DeviceCmds/reboot
-POST2[POST]--201 Created-->/DeviceCmds/configuration
-POST2[POST]--201 Created-->/DeviceCmds/firmware
-end
+device_API_GET[GET]--200 OK-->retrieveARoutersNetworkInformation["/devices/network-information/{MAC}/{wifiEnable}"]
+device_API_POST[POST]--201 Created-->sendRebootCommandToRouter["/devices/reboot/{MAC}"]
+device_API_GET[POST]--201 Created-->pushTheConfigurationToRouter["/devices/configuration"]
+device_API_GET[POST]--201 Created-->updateTheFirmwareOfOneOrMoreRouters["/devices/firmware"]
 
-subgraph User_API
-direction LR
-GET3[GET]--200 OK-->/users/api-keys
-POST3[POST]--200 OK-->/users/login
-POST3[POST]--201 Created-->/users/registration
-POST3[POST]--200 OK-->/users/forget-password
-POST3[POST]--200 OK-->/users/verify-email
-end
+device_API_PUT[PUT]--200 OK-->retrievePingStatusOnTheRouter["/device/synchronizations/ping-status/{MAC}"]
+device_API_DELETE[DELETE]--204 No Content-->deleteAnEntryInTheRouterSystemConfiguration["/device/synchronizations/delete-entry/{MAC}/{node}"]
+device_API_GET[GET]--200 OK-->retrieveCurrentSystemConfigurationOfARouter["/device/synchronizations/configuration/{MAC}"]
+device_API_POST[POST]--201 Created-->editARouterSystemConfiguration["/device/synchronizations/configuration/{MAC}"]
 
-subgraph Manufacturer_API
-direction LR
-POST4[POST]--201 Created-->/manufacturer/assignDeviceLicense
-POST4[POST]--201 Created-->/manufacturer/assignISPBulkDeviceLicense
-POST4[POST]--201 Created-->/manufacturer/transferDeviceLicense
-PUT4[PUT]--200 OK-->/manufacturer/renew
-DELETE4[DELETE]--204 No Content-->H["/manufacturer/{MAC}/DelLicense"]
-DELETE4[DELETE]--204 No Content-->I["/manufacturer/{MAC}/ISPBulkDelLicense"]
-GET4[GET]--200 OK-->/manufacturer/licenseStatus
-end
+device_API_POST[POST]--201 Created-->createGroup["/devices/groups"]
+device_API_GET[GET]--200 OK-->getAllGroups["/devices/groups"]
+device_API_GET[GET]--200 OK-->getGroupsById["/devices/groups/{GROUP_ID}"]
+device_API_PUT[PUT]--200 OK-->updateAGroupInformation["/devices/groups/{GROUP_ID}"]
+device_API_DELETE[DELETE]--204 No Content-->deleteGroup["/devices/groups/{GROUP_ID}"]
 
-subgraph Report_Generation_API
-direction LR
-GET5[GET]--200 OK-->J["/ReportSystems/{reportname}/report"]
-POST5[POST]--201 Created-->/ReportSystems/createOrUpdateOptions
-end
+device_API_DELETE[DELETE]--204 No Content-->bulkDeleteGroups["/devices/groups/bulk"]
+device_API_GET[GET]--200 OK-->countDevicesOfAGroup["/devices/groups/device-count/{GROUP_ID}"]
 
-subgraph Alert_API
-direction LR
-POST6[POST]--201 Created-->/alertSetups/setAlert
-GET6[GET]--200 OK-->K["/alertSetups/{MAC}/getAlert"]
-end
-
-subgraph Bandwidth_API
-direction LR
-GET7[GET]--200 OK-->L["/usages/{MAC}/{start}/{end}/getUsage"]
-GET7[GET]--200 OK-->M["/usages/{MAC}/bandwidthByMAC"]
-end
-
-subgraph Group_API
-direction LR
-POST8[POST]--201 Created-->/groups/create
-GET8[GET]--200 OK-->/groups/all
-GET8[GET]--200 OK-->/groups/by-id
-PUT8[PUT]--200 OK-->/groups/update
-DELETE8[DELETE]--204 No Content-->/groups/delete
-DELETE8[DELETE]--204 No Content-->/groups/delete-bulk
-GET8[GET]--200 OK-->/groups/device-count
-POST8[POST]--201 Created-->/groups/plan-create
-PUT8[PUT]--200 OK-->/groups/plan-update-delete
-end
-
-subgraph Synchronizations
-direction LR
-PUT9[PUT]--200 OK-->/synchronizations/DiagnosticTool
-DELETE9[DELETE]--204 No Content-->N["/synchronizations/{MAC}/{node}/delEntry"]
-GET9[GET]--200 OK-->O["/synchronizations/{MAC}/sync"]
-POST9[POST]--201 Created-->/synchronizations/syncSettings
-end
-%%{
-init: {
-'theme': 'base',
-'themeVariables': {
-'primaryColor': '#3498db',
-'primaryTextColor': '#fff',
-'primaryBorderColor': '#2c3e50',
-'lineColor': 'red',
-'secondaryColor': '#2ecc71',
-'tertiaryColor': '#ecf0f1'
-}
-}
-}%%
-flowchart BT
-
-amop_website --> Device_API
-
-subgraph Internal_API
-direction BT
-Device_API
-Device_CMD_API
-User_API
-Manufacturer_API
-Report_Generation_API
-Alert_API
-Bandwidth_API
-Group_API
-Synchronizations
-amop_website --> Device_API
-amop_website --> Device_CMD_API
-amop_website --> User_API
-amop_website --> Manufacturer_API
-amop_website --> Report_Generation_API
-amop_website --> Alert_API
-amop_website --> Bandwidth_API
-amop_website --> Group_API
-amop_website --> Synchronizations
-end
-
-subgraph Device_API
-direction LR
-GET1[GET]--200 OK-->/devices
-GET1[GET]--200 OK-->A["/deviceLists/{device_id}"]
-PATCH1[PATCH]--200 OK-->B["/deviceLists/{device_id}"]
-GET1[GET]--200 OK-->/deviceLists/count
-PUT1[PUT]--200 OK-->/deviceLists/bulkUpdateDevices
-DELETE1[DELETE]--200 OK-->/deviceLists/bulkDelDevices
-GET1[GET]--200 OK-->C["/deviceLists/{pci}/{rfvalue}/DeviceAnalysis"]
-POST1[POST]--201 Created-->/deviceLists/geoDevice
-GET1[GET]--200 OK-->/deviceLists/devCarrierSummary
-GET1[GET]--200 OK-->/deviceLists/devModelSummary
-GET1[GET]--200 OK-->/deviceLists/devNetModeSummary
-POST1[POST]--200 OK-->/deviceLists/updateMultiTags
-PATCH1[PATCH]--200 OK-->E["/deviceLists/{device_id}/updateTags"]
-GET1[GET]--200 OK-->F["/deviceLists/{device_id}/tags"]
-GET1[GET]--200 OK-->/deviceLists/online
-GET1[GET]--200 OK-->/deviceLists/offline
-GET1[GET]--200 OK-->/deviceLists/gps-location
-end
-
-subgraph Device_CMD_API
-direction LR
-GET2[GET]--200 OK-->G["/DeviceCmds/{MAC}/{wifiEnable}/networkDevices"]
-POST2[POST]--201 Created-->/DeviceCmds/reboot
-POST2[POST]--201 Created-->/DeviceCmds/configuration
-POST2[POST]--201 Created-->/DeviceCmds/firmware
 end
 
 subgraph User_API
 direction LR
-GET3[GET]--200 OK-->/users/api-keys
-POST3[POST]--200 OK-->/users/login
-POST3[POST]--201 Created-->/users/registration
-POST3[POST]--200 OK-->/users/forget-password
-POST3[POST]--200 OK-->/users/verify-email
+user_API_GET[GET]--200 OK-->getAPIKeys["/users/api-keys"]
+user_API_POST[POST]--200 OK-->login["/users/login"]
+user_API_POST[POST]--201 Created-->register["/users/registration"]
+user_API_GET[GET]--200 OK-->forgetPassword["/users/forget-password"]
+user_API_POST[POST]--200 OK-->verifyEmail["/users/verify-email"]
+%% admin create user, edit user, update user info, delete user
 end
 
 subgraph Manufacturer_API
 direction LR
-POST4[POST]--201 Created-->/manufacturer/assignDeviceLicense
-POST4[POST]--201 Created-->/manufacturer/assignISPBulkDeviceLicense
-POST4[POST]--201 Created-->/manufacturer/transferDeviceLicense
-PUT4[PUT]--200 OK-->/manufacturer/renew
-DELETE4[DELETE]--204 No Content-->H["/manufacturer/{MAC}/DelLicense"]
-DELETE4[DELETE]--204 No Content-->I["/manufacturer/{MAC}/ISPBulkDelLicense"]
-GET4[GET]--200 OK-->/manufacturer/licenseStatus
+manufacturer_API_POST[POST]--201 Created-->assignTheLicenseToTheDevice["/manufacturer/license/assign"]
+manufacturer_API_POST[POST]--201 Created-->assignTheBulkLicenseToTheDevice["/manufacturer/license/assign/bulk"]
+manufacturer_API_POST[POST]--201 Created-->transferTheLicenseFromOneDeviceToAnother["/manufacturer/license/transfer"]
+manufacturer_API_PUT[PUT]--200 OK-->renewTheDeviceLicense["/manufacturer/license/renew/{MAC}"]
+manufacturer_API_DELETE[DELETE]--204 No Content-->deleteTheDeviceLicenseByMAC["/manufacturer/license/delete/{MAC}"]
+manufacturer_API_DELETE[DELETE]--204 No Content-->deleteDeviceLicenseInBulk["/manufacturer/license/delete/bulk/{MAC}"]
+manufacturer_API_GET[GET]--200 OK-->retrieveTheUsersLicenseDetails["/manufacturer/license-status"]
+
+%% the following endpoints are for report generation regarding manufacturers
+manufacturer_API_GET[GET]--200 OK-->generateAReportOfADeviceByMAC["/manufacturer/report/{reportname}/{MAC}"]
+manufacturer_API_POST[POST]--201 Created-->createAReportOfAUser["/manufacturer/report/create/{USER_ID}"]
+manufacturer_API_POST[PUT]--200 OK-->editAReportOfAUser["/manufacturer/report/edit/{USER_ID}"]
 end
 
-subgraph Report_Generation_API
+subgraph Notification_API
 direction LR
-GET5[GET]--200 OK-->J["/ReportSystems/{reportname}/report"]
-POST5[POST]--201 Created-->/ReportSystems/createOrUpdateOptions
-end
-
-subgraph Alert_API
-direction LR
-POST6[POST]--201 Created-->/alertSetups/setAlert
-GET6[GET]--200 OK-->K["/alertSetups/{MAC}/getAlert"]
-end
-
-subgraph Bandwidth_API
-direction LR
-GET7[GET]--200 OK-->L["/usages/{MAC}/{start}/{end}/getUsage"]
-GET7[GET]--200 OK-->M["/usages/{MAC}/bandwidthByMAC"]
-end
-
-subgraph Group_API
-direction LR
-POST8[POST]--201 Created-->/groups/create
-GET8[GET]--200 OK-->/groups/all
-GET8[GET]--200 OK-->/groups/by-id
-PUT8[PUT]--200 OK-->/groups/update
-DELETE8[DELETE]--204 No Content-->/groups/delete
-DELETE8[DELETE]--204 No Content-->/groups/delete-bulk
-GET8[GET]--200 OK-->/groups/device-count
-POST8[POST]--201 Created-->/groups/plan-create
-PUT8[PUT]--200 OK-->/groups/plan-update-delete
-end
-
-subgraph Synchronizations
-direction LR
-PUT9[PUT]--200 OK-->/synchronizations/DiagnosticTool
-DELETE9[DELETE]--204 No Content-->N["/synchronizations/{MAC}/{node}/delEntry"]
-GET9[GET]--200 OK-->O["/synchronizations/{MAC}/sync"]
-POST9[POST]--201 Created-->/synchronizations/syncSettings
-end
-%%{
-init: {
-'theme': 'base',
-'themeVariables': {
-'primaryColor': '#3498db',
-'primaryTextColor': '#fff',
-'primaryBorderColor': '#2c3e50',
-'lineColor': 'red',
-'secondaryColor': '#2ecc71',
-'tertiaryColor': '#ecf0f1'
-}
-}
-}%%
-flowchart BT
-
-amop_website --> Device_API
-
-subgraph Internal_API
-direction BT
-Device_API
-Device_CMD_API
-User_API
-Manufacturer_API
-Report_Generation_API
-Alert_API
-Bandwidth_API
-Group_API
-Synchronizations
-amop_website --> Device_API
-amop_website --> Device_CMD_API
-amop_website --> User_API
-amop_website --> Manufacturer_API
-amop_website --> Report_Generation_API
-amop_website --> Alert_API
-amop_website --> Bandwidth_API
-amop_website --> Group_API
-amop_website --> Synchronizations
-end
-
-subgraph Device_API
-direction LR
-GET1[GET]--200 OK-->/devices
-GET1[GET]--200 OK-->A["/deviceLists/{device_id}"]
-PATCH1[PATCH]--200 OK-->B["/deviceLists/{device_id}"]
-GET1[GET]--200 OK-->/deviceLists/count
-PUT1[PUT]--200 OK-->/deviceLists/bulkUpdateDevices
-DELETE1[DELETE]--200 OK-->/deviceLists/bulkDelDevices
-GET1[GET]--200 OK-->C["/deviceLists/{pci}/{rfvalue}/DeviceAnalysis"]
-POST1[POST]--201 Created-->/deviceLists/geoDevice
-GET1[GET]--200 OK-->/deviceLists/devCarrierSummary
-GET1[GET]--200 OK-->/deviceLists/devModelSummary
-GET1[GET]--200 OK-->/deviceLists/devNetModeSummary
-POST1[POST]--200 OK-->/deviceLists/updateMultiTags
-PATCH1[PATCH]--200 OK-->E["/deviceLists/{device_id}/updateTags"]
-GET1[GET]--200 OK-->F["/deviceLists/{device_id}/tags"]
-GET1[GET]--200 OK-->/deviceLists/online
-GET1[GET]--200 OK-->/deviceLists/offline
-GET1[GET]--200 OK-->/deviceLists/gps-location
-end
-
-subgraph Device_CMD_API
-direction LR
-GET2[GET]--200 OK-->G["/DeviceCmds/{MAC}/{wifiEnable}/networkDevices"]
-POST2[POST]--201 Created-->/DeviceCmds/reboot
-POST2[POST]--201 Created-->/DeviceCmds/configuration
-POST2[POST]--201 Created-->/DeviceCmds/firmware
-end
-
-subgraph User_API
-direction LR
-GET3[GET]--200 OK-->/users/api-keys
-POST3[POST]--200 OK-->/users/login
-POST3[POST]--201 Created-->/users/registration
-POST3[POST]--200 OK-->/users/forget-password
-POST3[POST]--200 OK-->/users/verify-email
-end
-
-subgraph Manufacturer_API
-direction LR
-POST4[POST]--201 Created-->/manufacturer/assignDeviceLicense
-POST4[POST]--201 Created-->/manufacturer/assignISPBulkDeviceLicense
-POST4[POST]--201 Created-->/manufacturer/transferDeviceLicense
-PUT4[PUT]--200 OK-->/manufacturer/renew
-DELETE4[DELETE]--204 No Content-->H["/manufacturer/{MAC}/DelLicense"]
-DELETE4[DELETE]--204 No Content-->I["/manufacturer/{MAC}/ISPBulkDelLicense"]
-GET4[GET]--200 OK-->/manufacturer/licenseStatus
-end
-
-subgraph Report_Generation_API
-direction LR
-GET5[GET]--200 OK-->J["/ReportSystems/{reportname}/report"]
-POST5[POST]--201 Created-->/ReportSystems/createOrUpdateOptions
-end
-
-subgraph Alert_API
-direction LR
-POST6[POST]--201 Created-->/alertSetups/setAlert
-GET6[GET]--200 OK-->K["/alertSetups/{MAC}/getAlert"]
-end
-
-subgraph Bandwidth_API
-direction LR
-GET7[GET]--200 OK-->L["/usages/{MAC}/{start}/{end}/getUsage"]
-GET7[GET]--200 OK-->M["/usages/{MAC}/bandwidthByMAC"]
-end
-
-subgraph Group_API
-direction LR
-POST8[POST]--201 Created-->/groups/create
-GET8[GET]--200 OK-->/groups/all
-GET8[GET]--200 OK-->/groups/by-id
-PUT8[PUT]--200 OK-->/groups/update
-DELETE8[DELETE]--204 No Content-->/groups/delete
-DELETE8[DELETE]--204 No Content-->/groups/delete-bulk
-GET8[GET]--200 OK-->/groups/device-count
-POST8[POST]--201 Created-->/groups/plan-create
-PUT8[PUT]--200 OK-->/groups/plan-update-delete
-end
-
-subgraph Synchronizations
-direction LR
-PUT9[PUT]--200 OK-->/synchronizations/DiagnosticTool
-DELETE9[DELETE]--204 No Content-->N["/synchronizations/{MAC}/{node}/delEntry"]
-GET9[GET]--200 OK-->O["/synchronizations/{MAC}/sync"]
-POST9[POST]--201 Created-->/synchronizations/syncSettings
+notification_API_POST[POST]--201 Created-->enableTypesOfAlertsForARouter["/alerts/set/{ALERT_TYPE}/{MAC}"]
+notification_API_GET[GET]--200 OK-->geCurrentAlertInfoOfARouter["/alerts/get/{MAC}"]
 end
