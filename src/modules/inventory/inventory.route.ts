@@ -17,7 +17,7 @@ const inventoryRoutes = (fastify: FastifyInstance, options: any, done: () => voi
   fastify.get('/list', options, getAllInventoryHandler)
 
   // route for global search
-  fastify.get('/search/:query', options, searchInventoryHandler)
+  fastify.get('/search', options, searchInventoryHandler)
 
   // Indicate that route registration is complete
   done()

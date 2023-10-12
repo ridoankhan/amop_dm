@@ -38,25 +38,6 @@ export const getAllInventoryHandler = async (
   }
 }
 
-// export const getAllInventoryHandler = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-//   try {
-//     // Fetch all inventory items from the service
-//     const inventory = await getAllInventory()
-
-//     // Respond with a success status code and the retrieved inventory data
-//     reply.code(httpStatus.OK).send(inventory)
-//   } catch (error) {
-//     console.error(error)
-
-//     // Handle errors and send appropriate responses
-//     if (error instanceof ApiError) {
-//       reply.code(error.statusCode).send(error.message)
-//     } else {
-//       reply.code(httpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error')
-//     }
-//   }
-// }
-
 /**
  * Controller method for creating multiple inventory items in bulk.
  *
@@ -95,14 +76,15 @@ export const createBulkInventoryHandler = async (request: FastifyRequest, reply:
  * @returns {Promise<void>}
  */
 export const searchInventoryHandler = async (
-  request: FastifyRequest<{ Params: { query: string } }>,
+  request: FastifyRequest<{ Querystring: Record<string, any> }>,
   reply: FastifyReply,
 ): Promise<void> => {
   try {
-    const { query } = request.params
+    const options: IOptions = pick(request.query, ['sortBy', 'limit', 'page', 'projectBy'])
+    const { searchElement } = request.query
 
     // Call the service function to search for inventory items
-    const inventory = await searchInventory(query)
+    const inventory = await searchInventory(searchElement, options)
 
     // Respond with a success status code and the retrieved inventory data
     reply.code(httpStatus.OK).send(inventory)

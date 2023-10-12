@@ -41,16 +41,6 @@ const getAllInventory = async (filter: Record<string, any>, options: IOptions): 
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error fetching inventory data')
   }
 }
-// const getAllInventory = async (): Promise<InventoryType[]> => {
-//   try {
-//     // Fetch all inventory items from the database
-//     const inventory = await Inventory.find().exec()
-//     return inventory
-//   } catch (error) {
-//     // If an error occurs during fetching, throw an error with a specific message
-//     throw new Error('Error fetching inventory data')
-//   }
-// }
 
 /**
  * Create multiple inventory items in bulk.
@@ -82,7 +72,41 @@ const createBulkInventory = async (data: InventoryType[]): Promise<InventoryType
  * @param {string} query - The search query.
  * @returns {Promise<InventoryType[]>} - A promise that resolves to an array of matching inventory items.
  */
-const searchInventory = async (query: string): Promise<InventoryType[]> => {
+// const searchInventory = async (query: string): Promise<InventoryType[]> => {
+//   try {
+//     // Create a regular expression to perform a case-insensitive search
+//     const regex = new RegExp(query, 'i')
+
+//     // Construct a query that searches across different data types
+//     const searchQuery = {
+//       $or: [
+//         { provider: regex },
+//         { customer: regex },
+//         { ip: regex },
+//         { mac: regex },
+//         { license: regex },
+//         { manufacturer: regex },
+//         { status: regex },
+//         {
+//           iccid: Number.isNaN(Number(query)) ? null : Number(query), // Match only if query is a number
+//         },
+//         {
+//           imei: Number.isNaN(Number(query)) ? null : Number(query), // Match only if query is a number
+//         },
+//       ].filter((condition) => condition),
+//     }
+
+//     // Use the find method to search for inventory items
+//     const inventory = await Inventory.find(searchQuery).exec()
+
+//     return inventory
+//   } catch (error) {
+//     console.error('Error searching inventory:', error)
+//     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error searching inventory')
+//   }
+// }
+
+const searchInventory = async (query: string, options: IOptions): Promise<InventoryType[]> => {
   try {
     // Create a regular expression to perform a case-insensitive search
     const regex = new RegExp(query, 'i')
@@ -107,7 +131,7 @@ const searchInventory = async (query: string): Promise<InventoryType[]> => {
     }
 
     // Use the find method to search for inventory items
-    const inventory = await Inventory.find(searchQuery).exec()
+    const inventory: any = await Inventory.paginate(searchQuery, options)
 
     return inventory
   } catch (error) {
